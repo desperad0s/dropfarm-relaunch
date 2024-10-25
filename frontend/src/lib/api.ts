@@ -1,59 +1,52 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// src/lib/api.ts
+const BASE_URL = 'http://localhost:8000/api/v1'; // Add this line
+
+interface LoginResponse {
+    access_token: string;
+    token_type: string;
+    user: {
+        id: number;
+        email: string;
+        is_active: boolean;
+    };
+}
 
 export const api = {
     auth: {
-        login: async (email: string, password: string) => {
-            return await api.post('/auth/login', { email, password });
-        },
-        register: async (email: string, password: string) => {
-            return await api.post('/auth/register', { email, password });
-        },
-        logout: async () => {
-            return await api.post('/auth/logout', {});
-        }
-    },
-    routines: {
-        list: async () => {
-            return await api.get('/routines');
-        },
-        create: async (routine: any) => {
-            return await api.post('/routines', routine);
-        },
-        start: async (id: string) => {
-            return await api.post(`/routines/${id}/start`, {});
-        },
-        stop: async (id: string) => {
-            return await api.post(`/routines/${id}/stop`, {});
-        }
-    },
-    schedules: {
-        list: async () => {
-            return await api.get('/schedules');
-        },
-        create: async (schedule: any) => {
-            return await api.post('/schedules', schedule);
-        }
-    },
-    get: async (path: string) => {
-        const response = await fetch(`${BASE_URL}${path}`, {
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
+        login: async (email: string, password: string): Promise<LoginResponse> => {
+            const formData = new FormData();
+            formData.append('username', email);
+            formData.append('password', password);
+            
+            const response = await fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Login failed');
             }
-        });
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-    },
-    post: async (path: string, data: any) => {
-        const response = await fetch(`${BASE_URL}${path}`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
+            
+            return await response.json();
+        },
+        
+        register: async (email: string, password: string) => {
+            const response = await fetch(`${BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Registration failed');
+            }
+            
+            return response.json();
+        }
     }
 };

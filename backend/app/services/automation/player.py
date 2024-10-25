@@ -1,3 +1,4 @@
+# app/services/automation/player.py
 from playwright.async_api import async_playwright, Browser, Page
 from typing import List, Dict, Any, Optional
 import json
@@ -36,13 +37,15 @@ class AutomationService:
             if not self.is_recording:
                 return
             
-            element = await self._page.evaluate('element => {
-                return {
-                    selector: element.id || element.className,
-                    innerText: element.innerText,
-                    tag: element.tagName.toLowerCase()
+            element = await self._page.evaluate("""
+                (element) => {
+                    return {
+                        selector: element.id || element.className,
+                        innerText: element.innerText,
+                        tag: element.tagName.toLowerCase()
+                    }
                 }
-            }', event)
+            """, event)
             
             self.recording.append({
                 'type': 'click',
@@ -65,11 +68,11 @@ class AutomationService:
             })
 
         # Register event listeners
-        await self._page.evaluate('''
+        await self._page.evaluate("""
             window.addEventListener('click', event => {
                 window.__recordClick(event);
             });
-        ''')
+        """)
         
         self._page.on('click', handle_click)
         self._page.on('response', handle_navigation)
@@ -142,7 +145,6 @@ class AutomationService:
                 if verify_mode:
                     raise
                 print(f"Error during playback: {str(e)}")
-                # Implement retry logic here if needed
 
     async def close(self) -> None:
         """Close the browser and cleanup."""
@@ -150,5 +152,3 @@ class AutomationService:
             await self._browser.close()
             self._browser = None
             self._page = None
-
-# TO-DO: Implement automation service

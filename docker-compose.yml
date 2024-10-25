@@ -4,7 +4,7 @@ services:
     image: postgres:14
     environment:
       POSTGRES_USER: dropfarm
-      POSTGRES_PASSWORD: dropfarm
+      POSTGRES_PASSWORD: testing123
       POSTGRES_DB: dropfarm
     ports:
       - "5433:5432"  # Changed port

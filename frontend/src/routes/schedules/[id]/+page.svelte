@@ -2,8 +2,8 @@
     import { onMount } from 'svelte';
     import { page } from '$app/stores';
     import { currentSchedule } from '$lib/stores/schedules';
-    import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-    import { Button } from '@/components/ui/button';
+    import { Card, CardHeader, CardTitle, CardContent } from '$lib/components/ui/card';
+    import { Button } from '$lib/components/ui/button';
     import { api } from '$lib/api';
 
     let loading = true;

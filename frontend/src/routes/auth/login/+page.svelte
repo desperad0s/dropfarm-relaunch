@@ -1,11 +1,11 @@
 <script lang="ts">
     import { api } from '$lib/api';
     import { goto } from '$app/navigation';
-    import { user, isAuthenticated } from '$lib/stores/auth';
-    import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-    import { Input } from '@/components/ui/input';
-    import { Button } from '@/components/ui/button';
-    import { Label } from '@/components/ui/label';
+    import { auth } from '$lib/stores/auth';
+    import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '$lib/components/ui/card';
+    import { Input } from '$lib/components/ui/input';
+    import { Button } from '$lib/components/ui/button';
+    import { Label } from '$lib/components/ui/label';
 
     let email = '';
     let password = '';
@@ -13,11 +13,11 @@
 
     async function handleLogin() {
         try {
-            // TODO: Implement login logic using api.auth.login
-            // TODO: Set user store and isAuthenticated
-            // TODO: Redirect to dashboard
+            const response = await api.auth.login(email, password);
+            auth.setUser(response.user);
+            await goto('/dashboard');
         } catch (err) {
-            error = 'Login failed. Please check your credentials.';
+            error = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
         }
     }
 </script>

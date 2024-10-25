@@ -1,6 +1,6 @@
 # app/api/v1/routines.py
 from fastapi import APIRouter, Depends
-from app.services.automation.automation_service import AutomationService
+from app.services.automation.player import AutomationService  # Changed this line
 from app.core.auth import get_current_user
 
 router = APIRouter()
@@ -32,5 +32,3 @@ async def play_routine(routine_id: int, user = Depends(get_current_user)):
     await automation.playback_routine(routine.steps)
     await automation.close()
     return {"status": "playback_completed"}
-
-# TO-DO: Implement routines endpoints

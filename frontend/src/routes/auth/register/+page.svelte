@@ -1,10 +1,10 @@
 <script lang="ts">
     import { api } from '$lib/api';
     import { goto } from '$app/navigation';
-    import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-    import { Input } from '@/components/ui/input';
-    import { Button } from '@/components/ui/button';
-    import { Label } from '@/components/ui/label';
+    import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '$lib/components/ui/card';
+    import { Input } from '$lib/components/ui/input';
+    import { Button } from '$lib/components/ui/button';
+    import { Label } from '$lib/components/ui/label';
 
     let email = '';
     let password = '';
@@ -13,11 +13,15 @@
 
     async function handleRegister() {
         try {
-            // TODO: Implement registration validation
-            // TODO: Call api.auth.register
-            // TODO: Redirect to login on success
+            if (password !== confirmPassword) {
+                error = 'Passwords do not match';
+                return;
+            }
+
+            await api.auth.register(email, password);
+            await goto('/auth/login');
         } catch (err) {
-            error = 'Registration failed. Please try again.';
+            error = err instanceof Error ? err.message : 'Registration failed. Please try again.';
         }
     }
 </script>
