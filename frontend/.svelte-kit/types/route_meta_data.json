@@ -1,0 +1,10 @@
+{
+	"/": [],
+	"/auth/login": [],
+	"/auth/register": [],
+	"/dashboard": [],
+	"/routines": [],
+	"/routines/[id]": [],
+	"/schedules": [],
+	"/schedules/[id]": []
+}

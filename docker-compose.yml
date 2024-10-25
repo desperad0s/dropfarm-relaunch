@@ -1,0 +1,26 @@
+services:
+  postgres:
+    container_name: dropfarm-relaunch-postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: dropfarm
+      POSTGRES_PASSWORD: dropfarm
+      POSTGRES_DB: dropfarm
+    ports:
+      - "5433:5432"  # Changed port
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    container_name: dropfarm-relaunch-redis
+    image: redis:6
+    ports:
+      - "6380:6379"  # Changed port
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
